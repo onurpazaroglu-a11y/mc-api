@@ -1,0 +1,43 @@
+version: '3.9'
+
+networks:
+  mc-network:
+    driver: bridge
+
+services:
+  mc-api:
+    build:
+      context: ./mc-api
+    container_name: mc-api
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+      - "3002:3002"
+      - "3003:3003"
+      - "3004:3004"
+      - "3005:3005"
+      - "3006:3006"
+      - "3007:3007"
+      - "3008:3008"
+      - "3009:3009"
+      - "3010:3010"
+      - "3011:3011"
+      - "3012:3012"
+      - "3013:3013"
+      - "3014:3014"
+      - "3015:3015"
+      - "3016:3016"
+      - "3017:3017"
+      - "3018:3018"
+      - "3019:3019"
+    volumes:
+      - ./mc-api:/mc-api
+      - /mc-api/node_modules
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    networks:
+      - mc-network
