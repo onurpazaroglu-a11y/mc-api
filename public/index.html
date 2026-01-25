@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MC API CLI</title>
+<style>
+  body { font-family: monospace; background: #1e1e1e; color: #c5c8c6; display: flex; flex-direction: column; height: 100vh; margin: 0; }
+  #terminal { flex: 1; padding: 10px; overflow-y: auto; background: #000; }
+  #input { display: flex; padding: 10px; background: #222; }
+  #command { flex: 1; padding: 5px; font-family: monospace; font-size: 16px; background: #333; color: #fff; border: none; }
+  #send { padding: 5px 10px; margin-left: 5px; }
+</style>
+</head>
+<body>
+  <div id="terminal"></div>
+  <div id="input">
+    <input type="text" id="command" placeholder="Type command here...">
+    <button id="send">Send</button>
+  </div>
+
+<script>
+const terminal = document.getElementById('terminal');
+const commandInput = document.getElementById('command');
+const sendBtn = document.getElementById('send');
+
+function appendTerminal(text) {
+  terminal.innerHTML += text + "<br>";
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+async function sendCommand() {
+  const cmd = commandInput.value.trim();
+  if (!cmd) return;
+  appendTerminal(`<span style="color:#6ab04c;">> ${cmd}</span>`);
+  commandInput.value = '';
+
+  // POST to API
+  const res = await fetch('/command', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ command: cmd })
+  });
+  const data = await res.json();
+  appendTerminal(`<span style="color:#f5f5f5;">${data.response}</span>`);
+}
+
+sendBtn.addEventListener('click', sendCommand);
+commandInput.addEventListener('keypress', e => {
+  if (e.key === 'Enter') sendCommand();
+});
+</script>
+</body>
+</html>

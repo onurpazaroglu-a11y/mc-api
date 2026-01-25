@@ -1,16 +1,20 @@
 const fastify = require('fastify')({ logger: true });
-const apiRoutes = require('./routes/api');
-const healthRoutes = require('./routes/health');
+const path = require('path');
+const fastifyStatic = require('@fastify/static');
 
-const PORT = process.env.PORT || 3005;
+// Statik dosyaları sunmak için /public klasörü
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, 'public'),
+  prefix: '/', // http://localhost:3000/ ile erişilebilir
+});
 
-fastify.register(apiRoutes, { prefix: '/api' });
-fastify.register(healthRoutes, { prefix: '/health' });
+// Basit health endpoint
+fastify.get('/health', async (request, reply) => {
+  return { status: 'ok' };
+});
 
-fastify.listen({ port: PORT }, (err, address) => {
-    if (err) {
-        fastify.log.error(err);
-        process.exit(1);
-    }
-    fastify.log.info(`MC API server running at ${address}`);
+const PORT = process.env.PORT || 3000;
+fastify.listen({ port: PORT, host: '0.0.0.0' }, (err, address) => {
+  if (err) throw err;
+  fastify.log.info(`MC API server running at ${address}`);
 });
