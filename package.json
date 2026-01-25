@@ -25,7 +25,8 @@
   "author": "Artifact Studio",
   "license": "MIT",
   "dependencies": {
-    "fastify": "^4.25.0",
+    "@fastify/static": "^9.0.0",
+    "fastify": "^5.7.1",
     "pino": "^8.18.0",
     "pino-pretty": "^10.1.0"
   },
