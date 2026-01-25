@@ -7,7 +7,7 @@ networks:
 services:
   mc-api:
     build:
-      context: ./mc-api
+      context: .
     container_name: mc-api
     ports:
       - "3000:3000"
@@ -31,7 +31,7 @@ services:
       - "3018:3018"
       - "3019:3019"
     volumes:
-      - ./mc-api:/mc-api
+      - .:/mc-api
       - /mc-api/node_modules
     environment:
       - PORT=3000
