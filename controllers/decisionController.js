@@ -1,40 +1,28 @@
-const decisionService = require('../services/decisionService');
+module.exports = async function (fastify) {
 
-async function routes(fastify, options) {
-    fastify.post('/decision', async (request, reply) => {
-        try {
-            const decision = request.body;
-            const result = await decisionService.processDecision(decision);
-            return reply.code(200).send(result);
-        } catch (err) {
-            request.log.error(err);
-            return reply.code(500).send({ error: err.message });
+    // POST /api/execute
+    fastify.post('/execute', async (request, reply) => {
+        const { command } = request.body || {};
+
+        if (!command) {
+            reply.code(400);
+            return {
+                ok: false,
+                error: 'command field is required'
+            };
         }
+
+        // Şimdilik mock – ileride MCH / CLI / gRPC buraya bağlanır
+        const result = {
+            received: command,
+            executedAt: new Date().toISOString(),
+            status: 'executed'
+        };
+
+        return {
+            ok: true,
+            data: result
+        };
     });
 
-    fastify.get('/decision/:id', async (request, reply) => {
-        try {
-            const { id } = request.params;
-            const decision = await decisionService.getDecisionById(id);
-            if (!decision) return reply.code(404).send({ error: 'Decision not found' });
-            return reply.code(200).send(decision);
-        } catch (err) {
-            request.log.error(err);
-            return reply.code(500).send({ error: err.message });
-        }
-    });
-
-    fastify.post('/decision/:id/approve', async (request, reply) => {
-        try {
-            const { id } = request.params;
-            const { approve } = request.body;
-            const result = await decisionService.approveDecision(id, approve);
-            return reply.code(200).send(result);
-        } catch (err) {
-            request.log.error(err);
-            return reply.code(500).send({ error: err.message });
-        }
-    });
-}
-
-module.exports = routes;
+};
