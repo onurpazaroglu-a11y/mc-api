@@ -25,9 +25,10 @@
 10. Örnek payload'lar (Architech, Traid, Writer)
 
 ### 28.01.2026
-1. Ollana bağlandı!
+1. Ollama bağlandı!
 2. Container ve Network tekrar düzenlendi
 3. UI scrollbar problemi geçici olarak düzeltildi (scroll var ama bi tuhaf)
 4. localhost:3000/health çalışıyor ancak /status 404 not found veriyor.
 5. ** İyi olan**: Docker mc-api container'ı çalıştığı sürece AI - Chatbot hiçbirşeye ihtiyacı olmadan http:\\localhost:3000 ile açılıyor.
+
 6. Local Service - Ollama / llama2 çalışıyor sonraki adımda bunu api içine gömülebilecek birşeye çevirmem lazım. Ama şimdilik işler tıkırında :)
