@@ -1,241 +1,165 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MC AI</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MC AI</title>
 
-  <style>
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
-
-    .app {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      height: 100vh;
-      width: 100vw;
-    }
-
-    .header {
-      padding: 12px 16px;
-      background: #020617;
-      font-weight: 600;
-      text-align: center;
-      border-bottom: 1px solid #1e293b;
-    }
-
-    .main {
-      display: grid;
-      grid-template-columns: minmax(280px, 35%) 1fr;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .avatar {
-      background: #020617;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-right: 1px solid #1e293b;
-    }
-
-    .avatar-frame {
-      width: 90%;
-      aspect-ratio: 16 / 9;
-      border: 2px solid #334155;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #64748b;
-      font-size: 14px;
-    }
-
-    .chat {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    .messages {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-
-      min-height: 0;          /* KRİTİK */
-      scroll-behavior: smooth; /* YUMUŞAK SCROLL */
-    }
-
-    .msg {
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      line-height: 1.4;
-      font-size: 14px;
-      white-space: pre-wrap;
-    }
-
-    .user {
-      align-self: flex-end;
-      background: #2563eb;
-      color: #fff;
-    }
-
-    .bot {
-      align-self: flex-start;
-      background: #020617;
-      border: 1px solid #334155;
-    }
-
-    .scroll-bottom {
-      position: absolute;
-      right: 20px;
-      bottom: 80px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: #2563eb;
-      color: white;
-      border: none;
-      cursor: pointer;
-      display: none;
-      box-shadow: 0 6px 20px rgba(0,0,0,.35);
-    }
-
-    .input-bar {
-      display: flex;
-      gap: 8px;
-      padding: 12px;
-      border-top: 1px solid #1e293b;
-      background: #020617;
-    }
-
-    .input-bar input {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid #334155;
-      background: #020617;
-      color: #e5e7eb;
-      outline: none;
-    }
-
-    .input-bar button {
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: none;
-      background: #2563eb;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    @media (max-width: 900px) {
-      .main { grid-template-columns: 1fr; }
-      .avatar { display: none; }
-    }
-  </style>
+<style>
+html,body{
+  margin:0;height:100%;
+  background:#0f172a;color:#e5e7eb;
+  font-family:system-ui
+}
+.app{display:grid;grid-template-rows:auto 1fr;height:100vh}
+.header{
+  padding:12px;background:#020617;
+  text-align:center;font-weight:600
+}
+.main{display:grid;grid-template-columns:35% 1fr;height:100%}
+.avatar{
+  background:#020617;
+  display:flex;align-items:center;justify-content:center
+}
+.avatar-frame{
+  width:90%;aspect-ratio:16/9;
+  border:2px solid #334155;border-radius:12px
+}
+.chat{
+  display:flex;flex-direction:column;
+  position:relative;height:100%
+}
+.messages{
+  flex:1;
+  padding:16px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  scroll-behavior:smooth
+}
+.msg{
+  max-width:80%;
+  padding:10px 14px;
+  border-radius:14px;
+  white-space:pre-wrap
+}
+.user{align-self:flex-end;background:#2563eb;color:#fff}
+.bot{
+  align-self:flex-start;
+  background:#020617;
+  border:1px solid #334155
+}
+.input-bar{
+  display:flex;gap:8px;
+  padding:12px;background:#020617
+}
+input{
+  flex:1;padding:10px 14px;
+  border-radius:999px;
+  background:#020617;color:#fff;
+  border:1px solid #334155
+}
+button{
+  padding:10px 16px;
+  border-radius:999px;
+  border:none;
+  background:#2563eb;
+  color:#fff;
+  cursor:pointer
+}
+.scroll-btn{
+  position:absolute;
+  right:16px;
+  bottom:80px;
+  display:none;
+  background:#020617;
+  border:1px solid #334155
+}
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+  .avatar{display:none}
+}
+</style>
 </head>
 
 <body>
-
 <div class="app">
-
   <div class="header">MC AI Interface</div>
 
   <div class="main">
     <div class="avatar">
-      <div class="avatar-frame">AI AVATAR (16:9)</div>
+      <div class="avatar-frame"></div>
     </div>
 
     <div class="chat">
       <div id="messages" class="messages"></div>
+      <button id="scrollBottomBtn">⬇</button>
+      <button id="scrollBtn" class="scroll-btn">⬇</button>
 
       <div class="input-bar">
-        <button onclick="toggleMic()">🎙️</button>
-        <input id="input"
-               placeholder="Mesaj yaz veya konuş..."
-               onkeydown="handleKey(event)" />
-        <button onclick="send()">Gönder</button>
+        <input id="input" placeholder="Mesaj yaz..." />
+        <button id="sendBtn">Gönder</button>
       </div>
     </div>
   </div>
-
 </div>
 
-<script type="module">
-  import { chat } from './execute.js'
+<script>
+const messages = document.getElementById('messages')
+const input = document.getElementById('input')
+const sendBtn = document.getElementById('sendBtn')
+const scrollBtn = document.getElementById('scrollBtn')
 
-  const messages = document.getElementById('messages')
-  const input = document.getElementById('input')
+function isNearBottom(){
+  return messages.scrollHeight - messages.scrollTop - messages.clientHeight < 60
+}
 
-  let recognition
-  let micActive = false
-
-  function add(text, cls) {
-    const d = document.createElement('div')
-    d.className = `msg ${cls}`
-    d.textContent = text
-    messages.appendChild(d)
+function scrollToBottom(force=false){
+  if(force || isNearBottom()){
     messages.scrollTop = messages.scrollHeight
-    return d
   }
+}
 
-  function handleKey(e) {
-    if (e.key === 'Enter') send()
+function add(text, cls){
+  const d=document.createElement('div')
+  d.className='msg '+cls
+  d.textContent=text
+  messages.appendChild(d)
+  scrollToBottom()
+  return d
+}
+
+messages.addEventListener('scroll',()=>{
+  scrollBtn.style.display = isNearBottom() ? 'none' : 'block'
+})
+
+scrollBtn.onclick = ()=>scrollToBottom(true)
+
+async function send(){
+  const text=input.value.trim()
+  if(!text) return
+  add(text,'user')
+  input.value=''
+  const bot=add('...','bot')
+
+  try{
+    const r=await fetch('/api/execute',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({command:text})
+    })
+    const j=await r.json()
+    bot.textContent = j?.data?.received || 'Yanıt yok'
+  }catch{
+    bot.textContent='Sunucu hatası'
   }
+}
 
-  async function send() {
-    const text = input.value.trim()
-    if (!text) return
-
-    add(text, 'user')
-    input.value = ''
-
-    const botMsg = add('...', 'bot')
-
-    try {
-      const res = await chat(text)
-      botMsg.textContent = res.data?.received || 'Yanıt yok'
-    } catch (e) {
-      botMsg.textContent = 'AI hatası'
-    }
-  }
-
-  function toggleMic() {
-    if (!('webkitSpeechRecognition' in window)) {
-      alert('Tarayıcı desteklemiyor')
-      return
-    }
-
-    if (!recognition) {
-      recognition = new webkitSpeechRecognition()
-      recognition.lang = 'tr-TR'
-      recognition.continuous = false
-      recognition.onresult = e => {
-        input.value += e.results[0][0].transcript
-      }
-      recognition.onend = () => micActive = false
-    }
-
-    micActive ? recognition.stop() : recognition.start()
-    micActive = !micActive
-  }
-
-  window.send = send
-  window.toggleMic = toggleMic
-  window.handleKey = handleKey
+sendBtn.onclick = send
+input.addEventListener('keydown',e=>{
+  if(e.key==='Enter') send()
+})
 </script>
-
 </body>
 </html>
