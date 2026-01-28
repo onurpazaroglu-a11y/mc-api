@@ -36,6 +36,8 @@ services:
     environment:
       - PORT=3000
       - NODE_ENV=development
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     stdin_open: true
     tty: true
     restart: unless-stopped

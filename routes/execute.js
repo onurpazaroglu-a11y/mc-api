@@ -1,16 +1,20 @@
-const { can } = require('../permissions/matrix')
-const mchService = require('../services/mchService')
+// services/mchService.js
+const axios = require('axios');
 
-module.exports = async function (fastify) {
-    fastify.post('/api/execute', async (req, reply) => {
-        if (!can(req.context.client, 'execute')) {
-            return reply.code(403).send({
-                ok: false,
-                error: { code: 'PERMISSION_DENIED' }
-            })
-        }
+const OLLAMA_API = 'http://host.docker.internal:11434/v1/generate'; // Docker container'dan host
 
-        const result = await mchService.execute(req.body)
-        return { ok: true, context: req.context.client, data: result }
-    })
+async function execute(body) {
+    const prompt = body.command;
+
+    try {
+        const resp = await axios.post(OLLAMA_API, {
+            model: 'llama2',
+            prompt: prompt
+        });
+        return resp.data.completion;
+    } catch (err) {
+        return `AI hatası: ${err.message}`;
+    }
 }
+
+module.exports = { execute };

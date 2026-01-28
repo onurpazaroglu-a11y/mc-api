@@ -28,7 +28,7 @@ RUN npm install
 COPY . .
 
 # Port expose
-EXPOSE 3000
+EXPOSE 3000-3020
 
 # Container açıldığında server çalışsın
 CMD ["npm", "run", "dev"]
