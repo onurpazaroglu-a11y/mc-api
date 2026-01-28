@@ -1,31 +1,46 @@
-const decisionService = require('../services/decisionService');
+module.exports = async function (fastify) {
 
-async function routes(fastify, options) {
+  fastify.post('/execute', async (request, reply) => {
+    const { command } = request.body || {};
 
-    // Yeni Decision Object oluştur ve HITL ile işle
-    fastify.post('/decision', async (request, reply) => {
-        try {
-            const decision = request.body;
-            const result = await decisionService.processDecision(decision);
-            return reply.code(200).send(result);
-        } catch (err) {
-            request.log.error(err);
-            return reply.code(500).send({ error: 'Decision processing failed' });
+    if (!command) {
+      reply.code(400);
+      return {
+        ok: false,
+        error: 'command field is required'
+      };
+    }
+
+    try {
+      const res = await fetch('http://host.docker.internal:11434/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'llama2',
+          prompt: command,
+          stream: false
+        })
+      });
+
+      const json = await res.json();
+
+      return {
+        ok: true,
+        data: {
+          received: json.response?.trim() || 'AI boş cevap döndü',
+          executedAt: new Date().toISOString(),
+          status: 'executed'
         }
-    });
+      };
 
-    // Decision Object sorgulama (opsiyonel)
-    fastify.get('/decision/:id', async (request, reply) => {
-        try {
-            const { id } = request.params;
-            const decision = await decisionService.getDecisionById(id);
-            if (!decision) return reply.code(404).send({ error: 'Decision not found' });
-            return reply.code(200).send(decision);
-        } catch (err) {
-            request.log.error(err);
-            return reply.code(500).send({ error: 'Decision fetch failed' });
-        }
-    });
-}
+    } catch (err) {
+      fastify.log.error(err);
+      reply.code(500);
+      return {
+        ok: false,
+        error: 'AI backend (Ollama) bağlantı hatası'
+      };
+    }
+  });
 
-module.exports = routes;
+};

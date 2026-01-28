@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -70,9 +69,13 @@
       flex: 1;
       padding: 16px;
       overflow-y: auto;
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       gap: 10px;
+
+      min-height: 0;          /* KRİTİK */
+      scroll-behavior: smooth; /* YUMUŞAK SCROLL */
     }
 
     .msg {
@@ -94,6 +97,20 @@
       align-self: flex-start;
       background: #020617;
       border: 1px solid #334155;
+    }
+
+    .scroll-bottom {
+      position: absolute;
+      right: 20px;
+      bottom: 80px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,.35);
     }
 
     .input-bar {
@@ -146,7 +163,8 @@
 
       <div class="input-bar">
         <button onclick="toggleMic()">🎙️</button>
-        <input id="input" placeholder="Mesaj yaz veya konuş..."
+        <input id="input"
+               placeholder="Mesaj yaz veya konuş..."
                onkeydown="handleKey(event)" />
         <button onclick="send()">Gönder</button>
       </div>
@@ -188,7 +206,7 @@
 
     try {
       const res = await chat(text)
-      botMsg.textContent = res.response || 'Yanıt yok'
+      botMsg.textContent = res.data?.received || 'Yanıt yok'
     } catch (e) {
       botMsg.textContent = 'AI hatası'
     }
